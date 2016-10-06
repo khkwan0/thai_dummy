@@ -1,0 +1,19 @@
+{
+  "name": "thai_dummy",
+  "version": "0.0.1",
+  "description": "Thai dummy card game",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khkwan0/thai_dummy.git"
+  },
+  "author": "Kenneth Kwan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khkwan0/thai_dummy/issues"
+  },
+  "homepage": "https://github.com/khkwan0/thai_dummy#readme"
+}
