@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            li:hover {
+                cursor:pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <ul id="rooms">
+        </ul>
+        <button id="login">Login</button> 
+        <button style="display:none" id="leave">Leave</button>
+        <button id="sit" style="display:none">Sit</button>
+        <button id="start">Start</button>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+        <script>
+            $(document).ready(function() {
+                var socket = io();
+                socket.on('connect', function() {
+                    console.log('connected');
+                });
+
+                socket.on('update', function(msg) {
+                    rooms = JSON.parse(msg);
+                    console.log(rooms);
+                    for (var room_id in rooms) {
+                        if (room_id !== 'lobby') {
+                            $('#rooms').append('<li class="room" id="'+room_id+'">'+room_id+'</li>');
+                        }
+                    }
+                });
+
+                socket.on('update_room', function(msg) {
+                    console.log(msg);
+                    $('#join').show();
+                    room = JSON.parse(msg);
+                    if (room.players.length<4) {
+                        $('#sit').show();
+                        $('#sit').attr('room_id', room.id);
+                        $('#leave').attr('room_id', room.id);
+                        $('#start').attr('room_id', room.id);
+                    }
+                });
+
+                $('#login').click(function(data) {
+                    $(this).hide();
+                    socket.emit('login','ken');
+                });
+
+                $('#leave').click(function(data) {
+                    room_id = $(this).attr('room_id');
+                    socket.emit('leave', room_id);
+                });
+
+                $('#rooms').on('click','li',function(data) {
+                    room_id = $(this).attr('id');
+                    socket.emit('join', room_id);
+                    $('#leave').show();
+                });
+
+                $('#sit').click(function(data) {
+                    room_id = $(this).attr('room_id');
+                    socket.emit('sit', room_id);
+                });
+
+                $('#start').click(function(data) {
+                    room_id = $(this).attr('room_id');
+                    socket.emit('start', room_id);
+                });
+            });
+        </script>
+    </body>
+</html>
